@@ -33,15 +33,15 @@ public static class OpenTelemetry
             .AddMeter(Instrumentation.ActivitySource.Name)
             .AddRuntimeInstrumentation()
             .AddMeter(sp.GetRequiredService<OtelBlazorMeterProvider>().Meter.Name)
-            .AddOtlpExporter(otlpOptions =>
-            {
-                otlpOptions.Protocol = OpenTelemetryExporter.OtlpExportProtocol.HttpProtobuf;
-                otlpOptions.ExportProcessorType = ExportProcessorType.Simple;
-                otlpOptions.HttpClientFactory = () => new HttpClient(
-                    new JsInteropMessageHandler(
-                        sp.GetRequiredService<ILogger<JsInteropMessageHandler>>()
-                    ), false) { BaseAddress = new Uri("http://localhost") };
-            })
+            // .AddOtlpExporter(otlpOptions =>
+            // {
+            //     otlpOptions.Protocol = OpenTelemetryExporter.OtlpExportProtocol.HttpProtobuf;
+            //     otlpOptions.ExportProcessorType = ExportProcessorType.Simple;
+            //     otlpOptions.HttpClientFactory = () => new HttpClient(
+            //         new JsInteropMessageHandler(
+            //             sp.GetRequiredService<ILogger<JsInteropMessageHandler>>()
+            //         ), false) { BaseAddress = new Uri("http://localhost") };
+            // })
             .Build()
         );
 
