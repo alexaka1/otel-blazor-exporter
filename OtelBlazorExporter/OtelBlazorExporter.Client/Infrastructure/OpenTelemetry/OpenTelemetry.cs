@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.Versioning;
 using Microsoft.JSInterop;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
@@ -37,16 +38,19 @@ public static class OpenTelemetry
         return services;
     }
 
-    public static TracerProviderBuilder AddJsInteropExporter(this TracerProviderBuilder builder, IServiceProvider serviceProvider)
+
+    [SupportedOSPlatform("browser")]
+    public static TracerProviderBuilder AddJsInteropExporter(this TracerProviderBuilder builder,
+        IServiceProvider serviceProvider)
     {
         builder.AddOtlpExporter(otlpOptions =>
         {
             otlpOptions.Protocol = OpenTelemetryExporter.OtlpExportProtocol.HttpProtobuf;
             otlpOptions.ExportProcessorType = ExportProcessorType.Simple;
-            otlpOptions.HttpClientFactory = () => {
+            otlpOptions.HttpClientFactory = () =>
+            {
                 return new HttpClient(
                     new JsInteropMessageHandler(
-                        serviceProvider.GetRequiredService<IJSRuntime>(),
                         serviceProvider.GetRequiredService<ILogger<JsInteropMessageHandler>>()
                     ), false) { BaseAddress = new Uri("http://localhost") };
             };

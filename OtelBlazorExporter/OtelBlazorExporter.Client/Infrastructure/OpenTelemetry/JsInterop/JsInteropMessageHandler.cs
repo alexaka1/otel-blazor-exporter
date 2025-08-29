@@ -1,32 +1,35 @@
 using System.Net;
+using System.Runtime.Versioning;
 using Microsoft.JSInterop;
+using OpenTelemetry;
 
 namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
 
+[SupportedOSPlatform("browser")]
 class JsInteropMessageHandler : HttpMessageHandler
 {
-    private readonly IJSUnmarshalledRuntime _jSRuntime;
+
     private readonly ILogger<JsInteropMessageHandler> _logger;
 
-    public JsInteropMessageHandler(IJSRuntime jSRuntime, ILogger<JsInteropMessageHandler> logger)
+    public JsInteropMessageHandler(ILogger<JsInteropMessageHandler> logger)
     {
-        Console.WriteLine("Created Handler");
-        _jSRuntime = (IJSUnmarshalledRuntime)jSRuntime;
         _logger = logger;
     }
 
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
     {
 
+        using var scope = SuppressInstrumentationScope.Begin();
         try {
             using var ms = new MemoryStream();
             request?.Content?.CopyTo(ms, null, cancellationToken);
             ms.Position = 0;
-            _jSRuntime.InvokeUnmarshalled<byte[], int>("sendExportRequest", ms.ToArray());
+             OtlpExporterInterop.SendExportRequest(ms.ToArray());
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            _logger.LogWarning(ex, "Error has occured exporting trace");
         }
         return new HttpResponseMessage(HttpStatusCode.OK);
     }
