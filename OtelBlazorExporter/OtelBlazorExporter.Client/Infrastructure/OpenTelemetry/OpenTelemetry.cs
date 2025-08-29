@@ -12,6 +12,7 @@ namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry;
 
 public static class OpenTelemetry
 {
+    [SupportedOSPlatform("browser")]
     public static IServiceCollection SetupOpenTelemetry(this IServiceCollection services)
     {
         Instrumentation.ActivitySource = new ActivitySource(Instrumentation.ClientServiceName);
@@ -24,6 +25,7 @@ public static class OpenTelemetry
         services.AddSingleton<TracerProvider>(sp => Sdk.CreateTracerProviderBuilder()
             .ConfigureResource(r => r.AddDetector(sp.GetRequiredService<ResourceCollection>()))
             .AddSource(Instrumentation.ActivitySource.Name)
+            .AddJsInteropExporter(sp)
             // .AddConsoleExporter()
             .Build()
         );

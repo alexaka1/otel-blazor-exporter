@@ -9,7 +9,7 @@ builder.Services.SetupOpenTelemetry();
 builder.AddLogging();
 if (OperatingSystem.IsBrowser())
 {
-    await JSHost.ImportAsync("OtelBlazorExporter.Client.OtlpExport", "./js/otlp-export.js");
+    await JSHost.ImportAsync("OtelBlazorExporter.Client.OtlpExport", "/js/otlp-export.js");
 }
 
 await builder.Build().RunAsync();
