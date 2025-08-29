@@ -12,4 +12,7 @@ internal static partial class OtlpExporterInterop
 
     [JSImport("sendMetricsExportRequest", "OtelBlazorExporter.Client.OtlpExport")]
     internal static partial void SendMetricsExportRequest(byte[] data);
+
+    [JSImport("sendLogsExportRequest", "OtelBlazorExporter.Client.OtlpExport")]
+    internal static partial void SendLogsExportRequest(byte[] data);
 }

@@ -5,7 +5,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
-using OpenTelemetryExporter = OpenTelemetry.Exporter;
+using OpenTelemetry.Exporter;
 
 namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry;
 
@@ -35,7 +35,7 @@ public static class OpenTelemetry
             .AddMeter(sp.GetRequiredService<OtelBlazorMeterProvider>().Meter.Name)
             // .AddOtlpExporter(otlpOptions =>
             // {
-            //     otlpOptions.Protocol = OpenTelemetryExporter.OtlpExportProtocol.HttpProtobuf;
+            //                  otlpOptions.Protocol = OtlpExportProtocol.HttpProtobuf;
             //     otlpOptions.ExportProcessorType = ExportProcessorType.Simple;
             //     otlpOptions.HttpClientFactory = () => new HttpClient(
             //         new JsInteropMessageHandler(
@@ -44,6 +44,26 @@ public static class OpenTelemetry
             // })
             .Build()
         );
+
+        // Logging via OpenTelemetry (logs) using JS interop exporter
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.AddOpenTelemetry(o =>
+            {
+                o.IncludeScopes = true;
+                o.ParseStateValues = true;
+                var logExporterOptions = new OtlpExporterOptions
+                {
+                    Protocol = OtlpExportProtocol.HttpProtobuf,
+                    HttpClientFactory = () => new HttpClient(
+                        new JsInteropMessageHandler(
+                            services.BuildServiceProvider().GetRequiredService<ILogger<JsInteropMessageHandler>>()
+                        ), false) { BaseAddress = new Uri("http://localhost") }
+                };
+                var logExporter = new OtlpLogExporter(logExporterOptions);
+                o.AddProcessor(new SimpleLogRecordExportProcessor(logExporter));
+            });
+        });
 
         return services;
     }
@@ -55,7 +75,7 @@ public static class OpenTelemetry
     {
         builder.AddOtlpExporter(otlpOptions =>
         {
-            otlpOptions.Protocol = OpenTelemetryExporter.OtlpExportProtocol.HttpProtobuf;
+            otlpOptions.Protocol = OtlpExportProtocol.HttpProtobuf;
             otlpOptions.ExportProcessorType = ExportProcessorType.Simple;
             otlpOptions.HttpClientFactory = () =>
             {

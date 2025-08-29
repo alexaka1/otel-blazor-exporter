@@ -33,6 +33,6 @@ public static class Logging
                         // https://github.com/serilog/serilog-sinks-browserconsole/issues/20
                         .BrowserConsole(jsRuntime: sp.GetRequiredService<IJSRuntime>()))
                 ;
-        });
+        }, writeToProviders: true);
     }
 }

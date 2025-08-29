@@ -16,9 +16,15 @@ export function sendTraceExportRequest(bytes) {
   sendGenericExport(bytes, 'traces');
 }
 
+
 export function sendMetricsExportRequest(bytes) {
   // metrics
   sendGenericExport(bytes, 'metrics');
+}
+
+export function sendLogsExportRequest(bytes) {
+  // logs
+  sendGenericExport(bytes, 'logs');
 }
 /*
 needs CORS setup for your collector, ie:

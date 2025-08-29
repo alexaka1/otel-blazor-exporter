@@ -36,6 +36,11 @@ class JsInteropMessageHandler : HttpMessageHandler
                     _logger.LogDebug("Exporting traces via JS interop size={Size} bytes", data.Length);
                     OtlpExporterInterop.SendTraceExportRequest(data);
                 }
+                else if (path.EndsWith("/v1/logs", StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogDebug("Exporting logs via JS interop size={Size} bytes", data.Length);
+                    OtlpExporterInterop.SendLogsExportRequest(data);
+                }
             }
             catch (Exception ex)
             {
