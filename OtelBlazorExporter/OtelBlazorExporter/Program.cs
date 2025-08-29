@@ -1,5 +1,7 @@
 using OtelBlazorExporter.Client.Pages;
 using OtelBlazorExporter.Components;
+using OtelBlazorExporter.Infrastructure.Logging;
+using OtelBlazorExporter.Infrastructure.OpenTelemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Logging.ClearProviders();
+builder.Services.SetupOpenTelemetry();
+builder.AddLogging();
 
 var app = builder.Build();
 
