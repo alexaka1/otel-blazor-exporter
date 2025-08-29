@@ -4,6 +4,7 @@ function sendGenericExport(bytes, kind) {
     const blob = new Blob([u8], { type: 'application/x-protobuf' });
     const url = `http://localhost:4318/v1/${kind}`;
     if (!(navigator.sendBeacon && navigator.sendBeacon(url, blob))) {
+      console.warn('sendBeacon not supported, using fetch');
       fetch(url, { method: 'POST', body: blob, headers: { 'Content-Type': 'application/x-protobuf' }, keepalive: true });
     }
   } catch (e) {

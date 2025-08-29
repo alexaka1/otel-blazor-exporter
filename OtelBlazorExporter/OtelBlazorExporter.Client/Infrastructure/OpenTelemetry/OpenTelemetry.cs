@@ -70,14 +70,8 @@ public static class OpenTelemetry
                     return new SimpleLogRecordExportProcessor(logExporter);
                 });
                 // not having DI here REALLY sucks
-                o.SetResourceBuilder(ResourceBuilder.CreateDefault()
-                    .AddService(Instrumentation.ClientServiceName, Instrumentation.Namespace)
-                    .AddEnvironmentVariableDetector()
-                    .AddAttributes([
-                        new KeyValuePair<string, object>("dotnet.version", RuntimeInformation.FrameworkDescription),
-                        new KeyValuePair<string, object>("dotnet.rid", RuntimeInformation.RuntimeIdentifier),
-                        // new KeyValuePair<string, object>("deployment.environment.name", environment.Environment),
-                    ])
+                o.SetResourceBuilder(ResourceBuilder.CreateEmpty()
+                    .AddDetector(sp => sp.GetRequiredService<ResourceCollection>())
                 );
             });
         });

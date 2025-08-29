@@ -9,8 +9,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Logging.ClearProviders();
 if (OperatingSystem.IsBrowser())
 {
-    builder.AddLogging();
     builder.Services.SetupOpenTelemetry();
+    builder.AddLogging();
 }
 
 if (OperatingSystem.IsBrowser())
