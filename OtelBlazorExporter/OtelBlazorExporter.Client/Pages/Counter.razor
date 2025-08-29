@@ -1,4 +1,5 @@
 ﻿@page "/counter"
+@using System.Diagnostics
 @using OtelBlazorExporter.Client.Infrastructure.OpenTelemetry
 @rendermode InteractiveAuto
 @inject LoginMetrics LoginMetrics
@@ -17,7 +18,7 @@
 
   private void IncrementCount()
   {
-    using var activity = Instrumentation.ActivitySource.StartActivity();
+    using var activity = Instrumentation.ActivitySource.StartActivity("Counter increment", ActivityKind.Client);
     LoginMetrics.IncrementLoginAttempts([new KeyValuePair<string, object?>("rendermode", RendererInfo.Name)]);
     currentCount++;
     Logger.LogWarning("Current count is {Counter}", currentCount);
