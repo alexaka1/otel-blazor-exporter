@@ -2,10 +2,11 @@
 @using OtelBlazorExporter.Client.Infrastructure.OpenTelemetry
 @rendermode InteractiveAuto
 @inject LoginMetrics LoginMetrics
+@inject ILogger<Counter> Logger
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>Counter (@RendererInfo.Name)</PageTitle>
 
-<h1>Counter</h1>
+<h1>Counter (@RendererInfo.Name)</h1>
 
 <p role="status">Current count: @currentCount</p>
 
@@ -19,6 +20,7 @@
     using var activity = Instrumentation.ActivitySource.StartActivity();
     LoginMetrics.IncrementLoginAttempts([new KeyValuePair<string, object?>("rendermode", RendererInfo.Name)]);
     currentCount++;
+    Logger.LogWarning("Current count is {Counter}", currentCount);
   }
 
 }
