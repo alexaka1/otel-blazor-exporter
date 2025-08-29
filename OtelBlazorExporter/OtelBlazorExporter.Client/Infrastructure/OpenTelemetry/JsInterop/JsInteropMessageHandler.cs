@@ -36,6 +36,6 @@ class JsInteropMessageHandler : HttpMessageHandler
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(Send(request, cancellationToken));
     }
 }
