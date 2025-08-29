@@ -54,6 +54,22 @@ public static class OpenTelemetry
                 o.IncludeScopes = true;
                 o.ParseStateValues = true;
                 o.IncludeFormattedMessage = true;
+                // for whatever reason, using the ServiceProvider override duplicates every log message 🫨
+                // o.AddProcessor(sp =>
+                // {
+                //     var logger = sp.GetRequiredService<ILogger<JsInteropMessageHandler>>();
+                //     var logExporterOptions = new OtlpExporterOptions
+                //     {
+                //         Protocol = OtlpExportProtocol.HttpProtobuf,
+                //         HttpClientFactory = () => new HttpClient(
+                //             new JsInteropMessageHandler(
+                //                 logger
+                //             ), false) { BaseAddress = new Uri("http://localhost") },
+                //         ExportProcessorType = ExportProcessorType.Simple,
+                //     };
+                //     var logExporter = new OtlpLogExporter(logExporterOptions);
+                //     return new SimpleLogRecordExportProcessor(logExporter);
+                // });
                 var logExporterOptions = new OtlpExporterOptions
                 {
                     Protocol = OtlpExportProtocol.HttpProtobuf,
@@ -65,7 +81,6 @@ public static class OpenTelemetry
                 };
                 var logExporter = new OtlpLogExporter(logExporterOptions);
                 o.AddProcessor(new SimpleLogRecordExportProcessor(logExporter));
-                // not having DI here REALLY sucks
                 o.SetResourceBuilder(ResourceBuilder.CreateEmpty()
                     .AddDetector(sp => sp.GetRequiredService<ResourceCollection>())
                 );
