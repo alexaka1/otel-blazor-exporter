@@ -1,5 +1,6 @@
 using System.Net;
 using System.Runtime.Versioning;
+using Microsoft.Extensions.Logging.Abstractions;
 using OpenTelemetry;
 
 namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
@@ -8,11 +9,11 @@ namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
 internal class JsInteropMessageHandler : HttpMessageHandler
 {
 
-    private readonly ILogger<JsInteropMessageHandler> _logger;
+    private readonly ILogger _logger;
 
-    public JsInteropMessageHandler(ILogger<JsInteropMessageHandler> logger)
+    public JsInteropMessageHandler(ILogger<JsInteropMessageHandler>? logger)
     {
-        _logger = logger;
+        _logger = logger ?? NullLogger<JsInteropMessageHandler>.Instance;
     }
 
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)

@@ -54,21 +54,17 @@ public static class OpenTelemetry
                 o.IncludeScopes = true;
                 o.ParseStateValues = true;
                 o.IncludeFormattedMessage = true;
-
-                o.AddProcessor(provider =>
+                var logExporterOptions = new OtlpExporterOptions
                 {
-                    var logExporterOptions = new OtlpExporterOptions
-                    {
-                        Protocol = OtlpExportProtocol.HttpProtobuf,
-                        HttpClientFactory = () => new HttpClient(
-                            new JsInteropMessageHandler(
-                                provider.GetRequiredService<ILogger<JsInteropMessageHandler>>()
-                            ), false) { BaseAddress = new Uri("http://localhost") },
-                        ExportProcessorType = ExportProcessorType.Simple,
-                    };
-                    var logExporter = new OtlpLogExporter(logExporterOptions);
-                    return new SimpleLogRecordExportProcessor(logExporter);
-                });
+                    Protocol = OtlpExportProtocol.HttpProtobuf,
+                    HttpClientFactory = () => new HttpClient(
+                        new JsInteropMessageHandler(
+                            null
+                        ), false) { BaseAddress = new Uri("http://localhost") },
+                    ExportProcessorType = ExportProcessorType.Simple,
+                };
+                var logExporter = new OtlpLogExporter(logExporterOptions);
+                o.AddProcessor(new SimpleLogRecordExportProcessor(logExporter));
                 // not having DI here REALLY sucks
                 o.SetResourceBuilder(ResourceBuilder.CreateEmpty()
                     .AddDetector(sp => sp.GetRequiredService<ResourceCollection>())
