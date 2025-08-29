@@ -57,7 +57,7 @@ public static class OpenTelemetry
                     Protocol = OtlpExportProtocol.HttpProtobuf,
                     HttpClientFactory = () => new HttpClient(
                         new JsInteropMessageHandler(
-                            services.BuildServiceProvider().GetRequiredService<ILogger<JsInteropMessageHandler>>()
+                            null
                         ), false) { BaseAddress = new Uri("http://localhost") }
                 };
                 var logExporter = new OtlpLogExporter(logExporterOptions);

@@ -9,17 +9,18 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Logging.ClearProviders();
 if (OperatingSystem.IsBrowser())
 {
+    builder.AddLogging();
     builder.Services.SetupOpenTelemetry();
 }
 
-builder.AddLogging();
 if (OperatingSystem.IsBrowser())
 {
     await JSHost.ImportAsync("OtelBlazorExporter.Client.OtlpExport", "../js/otlp-export.js");
 }
 
 var host = builder.Build();
-var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger($"{nameof(OtelBlazorExporter)}.{nameof(OtelBlazorExporter.Client)}");
+var logger = host.Services.GetRequiredService<ILoggerFactory>()
+    .CreateLogger($"{nameof(OtelBlazorExporter)}.{nameof(OtelBlazorExporter.Client)}");
 _ = host.Services.GetRequiredService<TracerProvider>();
 _ = host.Services.GetRequiredService<MeterProvider>();
 logger.LogInformation("Starting in WebAssembly mode");

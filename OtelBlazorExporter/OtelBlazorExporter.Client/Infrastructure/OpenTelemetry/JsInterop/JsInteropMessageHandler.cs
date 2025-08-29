@@ -5,12 +5,12 @@ using OpenTelemetry;
 namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
 
 [SupportedOSPlatform("browser")]
-class JsInteropMessageHandler : HttpMessageHandler
+internal class JsInteropMessageHandler : HttpMessageHandler
 {
 
-    private readonly ILogger<JsInteropMessageHandler> _logger;
+    private readonly ILogger<JsInteropMessageHandler>? _logger;
 
-    public JsInteropMessageHandler(ILogger<JsInteropMessageHandler> logger)
+    public JsInteropMessageHandler(ILogger<JsInteropMessageHandler>? logger)
     {
         _logger = logger;
     }
@@ -28,28 +28,28 @@ class JsInteropMessageHandler : HttpMessageHandler
             {
                 if (path.EndsWith("/v1/metrics", StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogDebug("Exporting metrics via JS interop size={Size} bytes", data.Length);
+                    _logger?.LogDebug("Exporting metrics via JS interop size={Size} bytes", data.Length);
                     OtlpExporterInterop.SendMetricsExportRequest(data);
                 }
                 else if (path.EndsWith("/v1/traces", StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogDebug("Exporting traces via JS interop size={Size} bytes", data.Length);
+                    _logger?.LogDebug("Exporting traces via JS interop size={Size} bytes", data.Length);
                     OtlpExporterInterop.SendTraceExportRequest(data);
                 }
                 else if (path.EndsWith("/v1/logs", StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogDebug("Exporting logs via JS interop size={Size} bytes", data.Length);
+                    _logger?.LogDebug("Exporting logs via JS interop size={Size} bytes", data.Length);
                     OtlpExporterInterop.SendLogsExportRequest(data);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "JS interop export failed for {Path}", path);
+                _logger?.LogError(ex, "JS interop export failed for {Path}", path);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Error occurred exporting telemetry");
+            _logger?.LogWarning(ex, "Error occurred exporting telemetry");
         }
         return new HttpResponseMessage(HttpStatusCode.OK);
     }
