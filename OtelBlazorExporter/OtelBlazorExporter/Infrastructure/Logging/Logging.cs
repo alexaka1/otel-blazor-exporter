@@ -30,14 +30,14 @@ public static class Logging
             {
                 loggerConfiguration.ReadFrom.Configuration(sp.GetRequiredService<IConfiguration>())
                     ;
-                    loggerConfiguration.WriteTo.Async(c => c.OpenTelemetry(openTelemetrySinkOptions =>
-                    {
-                        openTelemetrySinkOptions.ResourceAttributes =
-                            new Dictionary<string, object>(
-                                sp.GetRequiredService<ResourceCollection>().Detect().Attributes
-                            );
-                        openTelemetrySinkOptions.OnBeginSuppressInstrumentation = SuppressInstrumentationScope.Begin;
-                    }));
+                loggerConfiguration.WriteTo.Async(c => c.OpenTelemetry(openTelemetrySinkOptions =>
+                {
+                    openTelemetrySinkOptions.ResourceAttributes =
+                        new Dictionary<string, object>(
+                            sp.GetRequiredService<ResourceCollection>().Detect().Attributes
+                        );
+                    openTelemetrySinkOptions.OnBeginSuppressInstrumentation = SuppressInstrumentationScope.Begin;
+                }));
             },
             writeToProviders: false);
     }

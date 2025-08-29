@@ -2,11 +2,11 @@ using System.Diagnostics;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging.Abstractions;
 using OpenTelemetry;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
-using OpenTelemetry.Exporter;
 
 namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry;
 

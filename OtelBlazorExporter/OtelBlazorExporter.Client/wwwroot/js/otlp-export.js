@@ -1,11 +1,11 @@
 function sendGenericExport(bytes, kind) {
   try {
     const u8 = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
-    const blob = new Blob([u8], { type: 'application/x-protobuf' });
+    const blob = new Blob([u8], {type: 'application/x-protobuf'});
     const url = `http://localhost:4318/v1/${kind}`;
     if (!(navigator.sendBeacon && navigator.sendBeacon(url, blob))) {
       console.warn('sendBeacon not supported, using fetch');
-      fetch(url, { method: 'POST', body: blob, headers: { 'Content-Type': 'application/x-protobuf' }, keepalive: true });
+      fetch(url, {method: 'POST', body: blob, headers: {'Content-Type': 'application/x-protobuf'}, keepalive: true});
     }
   } catch (e) {
     console.error('sendGenericExport failed', kind, e);
@@ -27,6 +27,7 @@ export function sendLogsExportRequest(bytes) {
   // logs
   sendGenericExport(bytes, 'logs');
 }
+
 /*
 needs CORS setup for your collector, ie:
 ```yaml

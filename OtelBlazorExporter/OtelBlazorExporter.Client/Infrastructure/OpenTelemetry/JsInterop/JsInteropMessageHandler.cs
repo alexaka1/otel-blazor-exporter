@@ -7,7 +7,6 @@ namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
 [SupportedOSPlatform("browser")]
 internal class JsInteropMessageHandler : HttpMessageHandler
 {
-
     private readonly ILogger _logger;
 
     public JsInteropMessageHandler(ILogger<JsInteropMessageHandler> logger)
@@ -18,12 +17,13 @@ internal class JsInteropMessageHandler : HttpMessageHandler
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         using var scope = SuppressInstrumentationScope.Begin();
-        try {
+        try
+        {
             using var ms = new MemoryStream();
             request.Content?.CopyTo(ms, null, cancellationToken);
             ms.Position = 0;
-            var data = ms.ToArray();
-            var path = request.RequestUri?.AbsolutePath ?? string.Empty;
+            byte[] data = ms.ToArray();
+            string path = request.RequestUri?.AbsolutePath ?? string.Empty;
             try
             {
                 if (path.EndsWith("/v1/metrics", StringComparison.OrdinalIgnoreCase))
@@ -51,10 +51,12 @@ internal class JsInteropMessageHandler : HttpMessageHandler
         {
             _logger.LogWarning(ex, "Error occurred exporting telemetry");
         }
+
         return new HttpResponseMessage(HttpStatusCode.OK);
     }
 
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
         return Task.FromResult(Send(request, cancellationToken));
     }

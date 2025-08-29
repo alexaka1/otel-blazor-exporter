@@ -27,14 +27,14 @@ public static class Services
                     .AddRuntimeInstrumentation()
                     .AddAspNetCoreInstrumentation()
                     .AddMeter(OtelBlazorMeterProvider.DefaultMeterName);
-                    metrics.AddOtlpExporter();
+                metrics.AddOtlpExporter();
             })
             .WithTracing(tracing =>
             {
                 tracing
                     .AddAspNetCoreInstrumentation()
-                    .AddSource(Instrumentation.ActivitySource.Name) ;
-                    tracing.AddOtlpExporter();
+                    .AddSource(Instrumentation.ActivitySource.Name);
+                tracing.AddOtlpExporter();
             });
 
         return services;

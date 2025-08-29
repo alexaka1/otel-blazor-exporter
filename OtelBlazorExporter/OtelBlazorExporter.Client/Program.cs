@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using OtelBlazorExporter.Client.Infrastructure;
-using OtelBlazorExporter.Client.Infrastructure.OpenTelemetry;
 using System.Runtime.InteropServices.JavaScript;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using OtelBlazorExporter.Client.Infrastructure;
+using OtelBlazorExporter.Client.Infrastructure.OpenTelemetry;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Logging.ClearProviders();

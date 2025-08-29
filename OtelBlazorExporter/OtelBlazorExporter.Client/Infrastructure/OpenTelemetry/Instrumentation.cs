@@ -12,10 +12,7 @@ public static class Instrumentation
     public static ActivitySource ActivitySource
     {
         get => s_activitySource ?? throw new InvalidOperationException("ActivitySource not initialized");
-        set
-        {
-            s_activitySource ??= value;
-        }
+        set => s_activitySource ??= value;
     }
 
     public const string ServerServiceName = "otel.test.backend";
