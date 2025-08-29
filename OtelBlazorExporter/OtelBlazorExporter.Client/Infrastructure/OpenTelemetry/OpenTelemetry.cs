@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using Microsoft.Extensions.Logging.Abstractions;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -75,7 +75,8 @@ public static class OpenTelemetry
                     Protocol = OtlpExportProtocol.HttpProtobuf,
                     HttpClientFactory = () => new HttpClient(
                         new JsInteropMessageHandler(
-                            null
+                            // we don't have DI here and it kinda doesn't make sense to log in a log exporter
+                            NullLogger<JsInteropMessageHandler>.Instance
                         ), false) { BaseAddress = new Uri("http://localhost") },
                     ExportProcessorType = ExportProcessorType.Simple,
                 };
