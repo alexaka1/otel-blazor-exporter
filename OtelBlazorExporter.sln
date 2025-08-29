@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtelBlazorExporter", "OtelBlazorExporter\OtelBlazorExporter\OtelBlazorExporter.csproj", "{5A9FA95A-2ADE-4972-836D-E973BD99D43E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtelBlazorExporter.Client", "OtelBlazorExporter\OtelBlazorExporter.Client\OtelBlazorExporter.Client.csproj", "{C7079C75-DB0E-45B2-8942-14E9C444D8E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A9FA95A-2ADE-4972-836D-E973BD99D43E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A9FA95A-2ADE-4972-836D-E973BD99D43E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A9FA95A-2ADE-4972-836D-E973BD99D43E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A9FA95A-2ADE-4972-836D-E973BD99D43E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7079C75-DB0E-45B2-8942-14E9C444D8E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7079C75-DB0E-45B2-8942-14E9C444D8E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7079C75-DB0E-45B2-8942-14E9C444D8E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7079C75-DB0E-45B2-8942-14E9C444D8E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
