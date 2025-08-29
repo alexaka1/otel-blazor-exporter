@@ -1,13 +1,24 @@
-export function sendExportRequest(bytes) {
+function sendGenericExport(bytes, kind) {
   try {
-    // bytes should arrive as a Uint8Array when imported via [JSImport]
-    console.log('sendExportRequest called');
     const u8 = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
     const blob = new Blob([u8], { type: 'application/x-protobuf' });
-    navigator.sendBeacon('http://localhost:4318/v1/traces', blob);
+    const url = `http://localhost:4318/v1/${kind}`;
+    if (!(navigator.sendBeacon && navigator.sendBeacon(url, blob))) {
+      fetch(url, { method: 'POST', body: blob, headers: { 'Content-Type': 'application/x-protobuf' }, keepalive: true });
+    }
   } catch (e) {
-    console.error('sendExportRequest failed', e);
+    console.error('sendGenericExport failed', kind, e);
   }
+}
+
+export function sendTraceExportRequest(bytes) {
+  // traces
+  sendGenericExport(bytes, 'traces');
+}
+
+export function sendMetricsExportRequest(bytes) {
+  // metrics
+  sendGenericExport(bytes, 'metrics');
 }
 /*
 needs CORS setup for your collector, ie:

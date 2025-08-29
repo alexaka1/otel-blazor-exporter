@@ -7,6 +7,9 @@ namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
 internal static partial class OtlpExporterInterop
 {
     // Imports the JS function exported from wwwroot/js/otlp-export.js module name loaded in Program.cs
-    [JSImport("sendExportRequest", "OtelBlazorExporter.Client.OtlpExport")]
-    internal static partial void SendExportRequest(byte[] data);
+    [JSImport("sendTraceExportRequest", "OtelBlazorExporter.Client.OtlpExport")]
+    internal static partial void SendTraceExportRequest(byte[] data);
+
+    [JSImport("sendMetricsExportRequest", "OtelBlazorExporter.Client.OtlpExport")]
+    internal static partial void SendMetricsExportRequest(byte[] data);
 }

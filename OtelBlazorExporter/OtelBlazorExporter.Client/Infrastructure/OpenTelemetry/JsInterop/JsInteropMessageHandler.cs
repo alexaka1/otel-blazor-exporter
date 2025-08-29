@@ -1,6 +1,5 @@
 using System.Net;
 using System.Runtime.Versioning;
-using Microsoft.JSInterop;
 using OpenTelemetry;
 
 namespace OtelBlazorExporter.Client.Infrastructure.OpenTelemetry.JsInterop;
@@ -18,18 +17,34 @@ class JsInteropMessageHandler : HttpMessageHandler
 
     protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-
         using var scope = SuppressInstrumentationScope.Begin();
         try {
             using var ms = new MemoryStream();
-            request?.Content?.CopyTo(ms, null, cancellationToken);
+            request.Content?.CopyTo(ms, null, cancellationToken);
             ms.Position = 0;
-             OtlpExporterInterop.SendExportRequest(ms.ToArray());
+            var data = ms.ToArray();
+            var path = request.RequestUri?.AbsolutePath ?? string.Empty;
+            try
+            {
+                if (path.EndsWith("/v1/metrics", StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogDebug("Exporting metrics via JS interop size={Size} bytes", data.Length);
+                    OtlpExporterInterop.SendMetricsExportRequest(data);
+                }
+                else if (path.EndsWith("/v1/traces", StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogDebug("Exporting traces via JS interop size={Size} bytes", data.Length);
+                    OtlpExporterInterop.SendTraceExportRequest(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "JS interop export failed for {Path}", path);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            _logger.LogWarning(ex, "Error has occured exporting trace");
+            _logger.LogWarning(ex, "Error occurred exporting telemetry");
         }
         return new HttpResponseMessage(HttpStatusCode.OK);
     }
