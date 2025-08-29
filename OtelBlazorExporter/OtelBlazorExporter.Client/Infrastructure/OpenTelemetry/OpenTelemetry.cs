@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
@@ -52,16 +53,28 @@ public static class OpenTelemetry
             {
                 o.IncludeScopes = true;
                 o.ParseStateValues = true;
+                o.IncludeFormattedMessage = true;
                 var logExporterOptions = new OtlpExporterOptions
                 {
                     Protocol = OtlpExportProtocol.HttpProtobuf,
                     HttpClientFactory = () => new HttpClient(
                         new JsInteropMessageHandler(
                             null
-                        ), false) { BaseAddress = new Uri("http://localhost") }
+                        ), false) { BaseAddress = new Uri("http://localhost") },
+                    ExportProcessorType = ExportProcessorType.Simple,
                 };
                 var logExporter = new OtlpLogExporter(logExporterOptions);
                 o.AddProcessor(new SimpleLogRecordExportProcessor(logExporter));
+                // not having DI here REALLY sucks
+                o.SetResourceBuilder(ResourceBuilder.CreateDefault()
+                    .AddService(Instrumentation.ClientServiceName, Instrumentation.Namespace)
+                    .AddEnvironmentVariableDetector()
+                    .AddAttributes([
+                        new KeyValuePair<string, object>("dotnet.version", RuntimeInformation.FrameworkDescription),
+                        new KeyValuePair<string, object>("dotnet.rid", RuntimeInformation.RuntimeIdentifier),
+                        // new KeyValuePair<string, object>("deployment.environment.name", environment.Environment),
+                    ])
+                );
             });
         });
 
